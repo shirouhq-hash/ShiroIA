@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion — Chat IA</title>
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body>
+
+  <!-- Particules fond -->
+  <div class="bg-particles">
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="auth-container">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <img src="ShiroIA.png" alt="Logo" class="auth-logo-img" onerror="this.style.display='none'" />
+      <h1>Chat IA</h1>
+      <p>Connecte-toi pour accéder au chat</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Connexion</button>
+      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Inscription</button>
+    </div>
+
+    <!-- Formulaire Connexion -->
+    <form class="auth-form" id="form-login" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label>Adresse email</label>
+        <input type="email" id="login-email" placeholder="ton@email.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <div class="input-pw-wrap">
+          <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password" />
+          <button type="button" class="btn-eye" onclick="togglePw('login-password', this)">👁️</button>
+        </div>
+      </div>
+      <div class="form-forgot">
+        <a href="#" onclick="handleForgot(event)">Mot de passe oublié ?</a>
+      </div>
+      <button type="submit" class="btn-auth" id="btn-login">
+        <span class="btn-text">Se connecter</span>
+        <span class="btn-loader" style="display:none">⏳</span>
+      </button>
+    </form>
+
+    <!-- Formulaire Inscription -->
+    <form class="auth-form hidden" id="form-register" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label>Adresse email</label>
+        <input type="email" id="reg-email" placeholder="ton@email.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <div class="input-pw-wrap">
+          <input type="password" id="reg-password" placeholder="8 caractères minimum" required autocomplete="new-password" minlength="8" />
+          <button type="button" class="btn-eye" onclick="togglePw('reg-password', this)">👁️</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirmer le mot de passe</label>
+        <div class="input-pw-wrap">
+          <input type="password" id="reg-password2" placeholder="••••••••" required autocomplete="new-password" />
+          <button type="button" class="btn-eye" onclick="togglePw('reg-password2', this)">👁️</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-auth" id="btn-register">
+        <span class="btn-text">Créer un compte</span>
+        <span class="btn-loader" style="display:none">⏳</span>
+      </button>
+    </form>
+
+    <!-- Message erreur/succès -->
+    <div class="auth-msg" id="auth-msg"></div>
+
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      sendPasswordResetEmail,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyB7lQPA2Oj2ncw3NzDkCg49XCDHM3K7LxM",
+      authDomain:        "shiroia-ac299.firebaseapp.com",
+      projectId:         "shiroia-ac299",
+      storageBucket:     "shiroia-ac299.firebasestorage.app",
+      messagingSenderId: "97823288104",
+      appId:             "1:97823288104:web:aee33c055354d9f06b3e1d",
+      measurementId:     "G-GMTS6BFJMV"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Si déjà connecté → rediriger vers le chat
+    onAuthStateChanged(auth, user => {
+      if (user) window.location.href = "index.html";
+    });
+
+    // Exposer les fonctions au window
+    window._firebaseAuth = auth;
+    window._signIn       = signInWithEmailAndPassword;
+    window._signUp       = createUserWithEmailAndPassword;
+    window._resetPw      = sendPasswordResetEmail;
+  </script>
+
+  <script src="auth.js"></script>
+</body>
+</html>
